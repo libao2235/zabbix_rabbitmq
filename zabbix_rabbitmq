@@ -1,0 +1,29 @@
+#!/usr/bin/env pyton
+# -*- coding:utf-8 -*-
+
+'''
+author: libao
+time: 2017-10-20
+function: zabbix-rabbitmq
+'''
+
+import urllib2
+import json
+
+rabbitmq_ip = raw_input("plases input rabbitmq ip:")
+login_url = 'http://' + rabbitmq_ip + ':15672/api/vhosts/'
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
+    'Connection': 'keep-alive',
+    'Authorization':'Basic RFBTOkRQUw=='
+}
+request = urllib2.Request(login_url,headers=headers)
+response = urllib2.urlopen(request).read()
+rabbitmq_jsons = json.loads(response)
+
+for rabbitmq_json in rabbitmq_jsons:
+     if rabbitmq_json['name'] != '/':
+         print rabbitmq_json['name'] + ':' + str(rabbitmq_json['messages_ready'])
+     
